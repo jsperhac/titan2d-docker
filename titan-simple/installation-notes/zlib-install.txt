@@ -1,0 +1,50 @@
+libz, zlib
+10 Dec 19
+
+For some reason my configure script cannot find the installation of zlib.
+In fact: we just need a few additional packages (e.g. devel) as follows:
+
+	Try getting zlib with *-devel and *-static:
+
+	# yum install zlib*
+	Package zlib-devel-1.2.7-18.el7.x86_64 already installed and latest version
+	Package zlib-static-1.2.7-18.el7.x86_64 already installed and latest version
+	Package zlib-1.2.7-18.el7.x86_64 already installed and latest version
+
+	Then we compile python once these packages are installed from the Centos
+	repos.
+
+
+sh-4.2# ls -lat /usr/lib64 | grep libz
+lrwxrwxrwx  1 root root      13 Oct  1 01:15 libz.so.1 -> libz.so.1.2.7
+-rwxr-xr-x  1 root root   90248 Oct 30  2018 libz.so.1.2.7
+
+# show which versions are available:
+
+sh-4.2# strings -d /usr/lib64/libz.so.1 | grep ^ZLIB
+ZLIB_1.2.0
+ZLIB_1.2.0.2
+ZLIB_1.2.0.8
+ZLIB_1.2.2
+ZLIB_1.2.2.3
+ZLIB_1.2.2.4
+ZLIB_1.2.3.3
+ZLIB_1.2.3.4
+ZLIB_1.2.3.5
+ZLIB_1.2.5.1
+ZLIB_1.2.5.2
+
+# show where the package's files are installed:
+
+sh-4.2# rpm -ql zlib
+/usr/lib64/libz.so.1
+/usr/lib64/libz.so.1.2.7
+/usr/share/doc/zlib-1.2.7
+/usr/share/doc/zlib-1.2.7/ChangeLog
+/usr/share/doc/zlib-1.2.7/FAQ
+/usr/share/doc/zlib-1.2.7/README
+
+# add to the ld library path:
+
+ENV LD_LIBRARY_PATH=`rpm -ql zlib | grep /libz.so.1$ | awk -F '/libz.so.1' '{print $1}'`:$LD_LIBRARY_PATH
+

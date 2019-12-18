@@ -1,0 +1,58 @@
+titan2d deps for gui, apparent:
+
+# system packages
+#
+# for compilation:
+#
+# autoconf
+# automake
+# gcc-c++
+# make
+# python-devel
+# swig3
+# zlib*
+#
+# for fetching code:
+#
+# git
+# wget
+#
+# for python viz stuff:
+#
+# Cython
+# python-pillow (PIL)
+# numpy
+# gnuplot
+
+
+RUN yum -y update && \
+    yum -y install \
+        autoconf \
+        automake \
+        Cython \
+        gcc-c++ \
+        git \
+        gnuplot \
+        make \
+        numpy \
+        python-devel \
+        python-pillow \
+        swig3 \
+        wget \
+        zlib*
+
+
+titan2d deps for non gui:
+
+RUN yum -y update && \
+    yum -y install \
+        autoconf \
+        automake \
+        gcc-c++ \
+        git \
+        make \
+        swig3 \
+        wget \
+        zlib*
+
+

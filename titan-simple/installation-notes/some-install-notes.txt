@@ -1,0 +1,100 @@
+other packages for titan2d
+early Dec 2019
+
+some are available as centos:7 system binaries. So should I?
+
+Namely:
+	pcre: pcre-8.32-17.el7.i686
+	swig: swig-2.0.10-5.el7.x86_64
+	cython: Cython-0.19-5.el7.x86_64
+	setuptools: python-setuptools-0.9.8-7.el7.noarch
+	numpy: numpy-1.7.1-13.el7.x86_64
+	freetype: freetype-2.8-14.el7.i686
+	gnuplot: gnuplot-4.6.2-3.el7.x86_64
+	
+	However the pcre, swig, cython, setuptools, numpy, freetype
+		need to be installed to work with python2, correct?
+	
+
+But not:
+	PIL
+	h5py
+	images2gif
+	libgd (but can find gnuplot)
+	
+	
+h5py
+	https://pypi.org/project/h5py/2.6.0/#files
+		h5py-2.6.0.tar.gz 
+		
+		https://files.pythonhosted.org/packages/22/82/64dada5382a60471f85f16eb7d01cc1a9620aea855cd665609adf6fdbb0d/h5py-2.6.0.tar.gz
+		
+--
+
+
+	
+	#for OpenMP mode:
+../../titan2d/configure --prefix=`pwd` --with-gdal=$TITAN_GDAL --with-hdf5=$TITAN_HDF5 \
+--with-swig=$TITAN_SWIG PYTHON=$TITAN_PYTHON/bin/python2.7\
+--enable-openmp CXX=g++ CXXFLAGS=-O3 --disable-java-gui
+
+--
+
+checking whether /opt/titan_wsp/Python-2.7.17/bin/python2.7--enable-openmp version is >= 2.7... no
+configure: error: Python interpreter is too old
+
+
+# so let's try hybrid MPI/OpenMP:
+
+../../titan2d/configure --prefix=`pwd` --with-gdal=$TITAN_GDAL --with-hdf5=$TITAN_HDF5 \
+--with-swig=$TITAN_SWIG PYTHON=$TITAN_PYTHON/bin/python2.7\
+--enable-openmp CXX=g++ CXXFLAGS=-O3 --disable-java-gui
+
+...no, I don't have mpi installed...
+
+---
+PLEASE TRY:
+
+../../titan2d/configure --prefix=`pwd` --with-gdal=$TITAN_GDAL --with-hdf5=$TITAN_HDF5 \
+PYTHON=$TITAN_PYTHON/bin/python2.7 \
+--with-swig=$TITAN_SWIG \
+CXXFLAGS=-g -O0 --disable-java-gui 
+
+-- the -g is wrong, and you need system package 'zlib'
+zlib-1.2.7-18.el7.i686 : The compression and decompression library
+(centos 7)
+
+sh-4.2# ../../titan2d/configure --prefix=`pwd` --with-gdal=$TITAN_GDAL --with-hdf5=$TITAN_HDF5 PYTHON=$TITAN_PYTHON/bin/python2.7 --with-swig=$TITAN_SWIG CXXFLAGS=-O0 --disable-java-gui
+
+-- 
+
+in the end we were successful with (note --enable-openmp!):
+
+	../../titan2d/configure --prefix=`pwd` \
+        CXX=g++ \
+        CXXFLAGS=-O3 \
+        --enable-openmp \
+        PYTHON=$TITAN_PYTHON/bin/python2.7 \
+        --with-gdal=$TITAN_GDAL \
+        --with-hdf5=$TITAN_HDF5 \
+        --with-swig=$TITAN_SWIG \
+        --disable-java-gui
+
+---
+
+centos keys: (todo)
+
+ Importing GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-7.1908.0.el7.centos.x86_64 (@CentOS)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+python compilation (this is fine)
+
+configure: WARNING:
+
+  By default, distutils will build C++ extension modules with "g++".
+  If this is not intended, then set CXX on the configure command line.
+
+

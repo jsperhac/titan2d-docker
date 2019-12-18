@@ -1,0 +1,6 @@
+Using Nikolay's v4.0.0 binary to construct a simple docker of titan2d:
+
+docker container build -t titan-from-binary:0.1 .
+docker run -it titan-from-binary:0.1 /bin/sh
+
+

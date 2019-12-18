@@ -1,0 +1,10 @@
+Getting fancy with pathsetting. 
+10 Dec 19
+
+Not actually doing this (Dockerfile does not support for ENV) but it's cute...
+
+# pick up the location where swig3 is installed. Needed for the configure step
+ENV TITAN_SWIG=`rpm -ql swig3 | grep bin | grep "/swig"$ | awk -F 'swig' '{print $1}'`
+RUN echo $TITAN_SWIG
+
+

@@ -1,0 +1,108 @@
+what do we need for the titan2d gui stuff?
+13 Dec 19
+
+refer here:
+https://github.com/TITAN2D/titan2d/blob/master/INSTALL.PORTABLE
+
+and can I build an image and use that going forward?
+caution: once you install python2 you cannot run a modern version of yum
+	(right, so don't install a nondefault python2 version in centos 7~~)
+
+from centos:7
+
+Cython.x86_64
+
+numpy.x86_64
+
+Installing:
+ numpy                                                       x86_64                         1:1.7.1-13.el7                           base                         2.8 M
+Installing for dependencies:
+ atlas                                                       x86_64                         3.10.1-12.el7                            base                         4.5 M
+ blas                                                        x86_64                         3.4.2-8.el7                              base                         399 k
+ lapack                                                      x86_64                         3.4.2-8.el7                              base                         5.4 M
+ libgfortran                                                 x86_64                         4.8.5-39.el7                             base                         300 k
+ libquadmath                                                 x86_64                         4.8.5-39.el7                             base                         190 k
+ python-backports                                            x86_64                         1.0-8.el7                                base                         5.8 k
+ python-backports-ssl_match_hostname                         noarch                         3.5.0.1-1.el7                            base                          13 k
+ python-ipaddress                                            noarch                         1.0.16-2.el7                             base                          34 k
+ python-nose                                                 noarch                         1.3.7-1.el7                              base                         276 k
+ python-setuptools                                           noarch                         0.9.8-7.el7                              base                         397 k
+
+
+
+# now we install stuff like
+swig3
+Cython
+python-setuptools
+
+numpy
+
+h5py???
+
+pillow (was PIL)
+
+Installing:
+ python-pillow                            x86_64                            2.0.0-19.gitd1c6db8.el7                               base                            438 k
+Installing for dependencies:
+ freetype                                 x86_64                            2.8-14.el7                                            base                            380 k
+ jbigkit-libs                             x86_64                            2.0-11.el7                                            base                             46 k
+ libjpeg-turbo                            x86_64                            1.2.90-8.el7                                          base                            135 k
+ libpng                                   x86_64                            2:1.5.13-7.el7_2                                      base                            213 k
+ libtiff                                  x86_64                            4.0.3-32.el7                                          base                            171 k
+ libwebp                                  x86_64                            0.3.0-7.el7                                           base                            170 k
+
+
+
+
+gd
+gnuplot
+
+Installing:
+ gnuplot                                        x86_64                        4.6.2-3.el7                                          base                           644 k
+Installing for dependencies:
+ cairo                                          x86_64                        1.15.12-4.el7                                        base                           741 k
+ dejavu-fonts-common                            noarch                        2.33-6.el7                                           base                            64 k
+ dejavu-sans-fonts                              noarch                        2.33-6.el7                                           base                           1.4 M
+ fontconfig                                     x86_64                        2.13.0-4.3.el7                                       base                           254 k
+ fontpackages-filesystem                        noarch                        1.44-8.el7                                           base                           9.9 k
+ freetype                                       x86_64                        2.8-14.el7                                           base                           380 k
+ fribidi                                        x86_64                        1.0.2-1.el7                                          base                            79 k
+ gd                                             x86_64                        2.0.35-26.el7                                        base                           146 k
+ gnuplot-common                                 x86_64                        4.6.2-3.el7                                          base                           595 k
+ graphite2                                      x86_64                        1.3.10-1.el7_3                                       base                           115 k
+ harfbuzz                                       x86_64                        1.7.5-2.el7                                          base                           267 k
+ hwdata                                         x86_64                        0.252-9.3.el7                                        base                           2.4 M
+ libX11                                         x86_64                        1.6.7-2.el7                                          base                           607 k
+ libX11-common                                  noarch                        1.6.7-2.el7                                          base                           164 k
+ libXau                                         x86_64                        1.0.8-2.1.el7                                        base                            29 k
+ libXdamage                                     x86_64                        1.1.4-4.1.el7                                        base                            20 k
+ libXext                                        x86_64                        1.3.3-3.el7                                          base                            39 k
+ libXfixes                                      x86_64                        5.0.3-1.el7                                          base                            18 k
+ libXft                                         x86_64                        2.3.2-2.el7                                          base                            58 k
+ libXpm                                         x86_64                        3.5.12-1.el7                                         base                            55 k
+ libXrender                                     x86_64                        0.9.10-1.el7                                         base                            26 k
+ libXxf86vm                                     x86_64                        1.1.4-1.el7                                          base                            18 k
+ libdrm                                         x86_64                        2.4.97-2.el7                                         base                           151 k
+ libedit                                        x86_64                        3.0-12.20121213cvs.el7                               base                            92 k
+ libglvnd                                       x86_64                        1:1.0.1-0.8.git5baa1e5.el7                           base                            89 k
+ libglvnd-egl                                   x86_64                        1:1.0.1-0.8.git5baa1e5.el7                           base                            44 k
+ libglvnd-glx                                   x86_64                        1:1.0.1-0.8.git5baa1e5.el7                           base                           125 k
+ libjpeg-turbo                                  x86_64                        1.2.90-8.el7                                         base                           135 k
+ libpciaccess                                   x86_64                        0.14-1.el7                                           base                            26 k
+ libpng                                         x86_64                        2:1.5.13-7.el7_2                                     base                           213 k
+ libthai                                        x86_64                        0.1.14-9.el7                                         base                           187 k
+ libwayland-client                              x86_64                        1.15.0-1.el7                                         base                            33 k
+ libwayland-server                              x86_64                        1.15.0-1.el7                                         base                            39 k
+ libxcb                                         x86_64                        1.13-1.el7                                           base                           214 k
+ libxshmfence                                   x86_64                        1.2-1.el7                                            base                           7.2 k
+ mesa-libEGL                                    x86_64                        18.3.4-5.el7                                         base                           109 k
+ mesa-libGL                                     x86_64                        18.3.4-5.el7                                         base                           165 k
+ mesa-libgbm                                    x86_64                        18.3.4-5.el7                                         base                            39 k
+ mesa-libglapi                                  x86_64                        18.3.4-5.el7                                         base                            45 k
+ pango                                          x86_64                        1.42.4-4.el7_7                                       updates                        280 k
+ pixman                                         x86_64                        0.34.0-1.el7                                         base                           248 k
+
+
+
+java 1.7.0 openjdk
+

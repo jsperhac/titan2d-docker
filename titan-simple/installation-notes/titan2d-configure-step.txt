@@ -1,0 +1,33 @@
+titan2d install/configure
+10 Dec 19
+
+with heavy reliance on the INSTALL:
+https://github.com/TITAN2D/titan2d/blob/master/INSTALL
+
+note "for OpenMP mode:"
+
+---
+this works:
+
+# ../../titan2d/configure --prefix=`pwd` --with-gdal=$TITAN_GDAL --with-hdf5=$TITAN_HDF5 \
+> --with-swig=$TITAN_SWIG PYTHON=$TITAN_PYTHON/bin/python2.7\
+> --enable-openmp CXX=g++ CXXFLAGS=-O3 --disable-java-gui
+
+
+Configuration Summary:
+  CXX                     g++
+  CXXFLAGS                -std=c++11 -O3 -fopenmp
+  CPPFLAGS                  -I/opt/titan_wsp/hdf5/include -I/opt/titan_wsp/gdal-2.1.0/include
+  LDFLAGS                 -g -w -O2 -L/opt/titan_wsp/hdf5/lib -Wl,-rpath,'$$ORIGIN/../lib:/opt/titan_wsp/hdf5/lib:/opt/titan_wsp/Python-2.7.17/lib:/opt/titan_wsp/gdal-2.1.0/lib'
+  LIBS                    -L/opt/titan_wsp/gdal-2.1.0/lib -lgdal -lhdf5_cpp -lhdf5 -lm -lz 
+  OpenMP                  enabled
+  MPI                     disabled
+  GDAL                    enabled
+  GDAL_CONFIG             /opt/titan_wsp/gdal-2.1.0/bin/gdal-config
+  GDAL_LIBS               -L/opt/titan_wsp/gdal-2.1.0/lib -lgdal
+  SWIG                    /usr/bin/swig
+  java GUI                disabled
+  TITAN2D_DEP             no
+  TITAN2D_PORTABLE        no
+  TITAN2D_ON_VHUB         no
+

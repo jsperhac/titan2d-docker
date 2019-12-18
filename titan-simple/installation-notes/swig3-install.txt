@@ -1,0 +1,43 @@
+swig3
+10 Dec 19
+
+# system packages
+RUN yum -y update && \
+    yum -y install \
+    swig3 \
+    zlib*
+
+Swig v3+ is needed:
+
+# yum install swig3
+Package swig3-3.0.12-17.el7.x86_64 already installed and latest version
+
+# rpm  -q swig3
+swig3-3.0.12-17.el7.x86_64
+
+# swig -version
+SWIG Version 3.0.12
+Compiled with g++ [x86_64-redhat-linux-gnu]
+Configured options: +pcre
+
+# though it won't run as such in a Dockerfile we want:
+ENV TITAN_SWIG=`rpm -ql swig3 | grep bin | grep "/swig"$ | awk -F 'swig' '{print $1}'`
+
+-----------------
+
+SWIG
+
+using the system swig (centos 7 repos) we get:
+SWIG Version 2.0.10
+Compiled with g++ [x86_64-redhat-linux-gnu]
+PCRE Version: 8.32 2012-11-30
+
+Instead opt for swig3!
+
+---
+
+if swig installed with system package,
+	location is /usr/bin/swig
+	
+	# rpm -ql swig3 | grep bin                                             
+	/usr/bin/swig

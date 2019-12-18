@@ -1,0 +1,12 @@
+Trying out the titan2d install, openmp, no GUI
+10 Dec 19
+
+Dockerfile is seen here
+
+titan-simple-0.2
+    before everything was automated, arguably identical
+
+titan-simple-1
+    entire install driven by the Dockerfile
+
+much cleanup needed on the image!
