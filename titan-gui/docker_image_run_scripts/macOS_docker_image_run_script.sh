@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script for running the titan-gui Docker image on a MacBook Air running the macOS High Sierra Version 10.13.6 operating system.
+# Script for running the titan-gui docker image on a MacBook Air running the macOS High Sierra Version 10.13.6 operating system.
 
 # References:
 
@@ -10,7 +10,7 @@
 
 # X11 is no longer included with Mac, but X11 server and client libraries are available from the XQuartz project. 
 # socat is a command line based utility that establishes two bidirectional byte streams and transfers data between them, 
-# used to enable data transfers between Docker and XQuartz.
+# used to enable data transfers between docker and the titan-gui XQuartz / X11 window.
 
 # Preparation:
 
@@ -19,50 +19,77 @@
 # brew install socat
 # brew cask install xquartz
 
-#  open -a Xquartz and check the  XQuartz / Preferences / Security / Allow connections from network clients check box.
-
-# Run ifconfig en0 to get the ip of the network interface of the host macOS. Example:
-# inet 192.168.1.151 netmask 0xffffff00 broadcast 192.168.1.255
+# open -a Xquartz and check the  XQuartz / Preferences / Security / Allow connections from network clients check box.
 
 # Run:
 
-echo "Creating the titan-gui container..."
+if [ $# -ne 1 ] ; then
 
-# Start the socat process
-socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
+   echo "Requires an argument. Enter 1 or 2:"
+   echo "1: docker run and open a bash terminal window"
+   echo "2: docker run detached and open a titan-gui X11 window"
 
-socat_ps=$(ps | grep -v grep | grep "socat")
-echo $socat_ps
+else
 
-# Docker run options:
+   echo "Creating and running the titan-gui container..."
 
-# --rm: automatically remove the created container when Docker exits
-# --name: assign a name to the created container
-# --interactive, -i: keep STDIN open even if not attached
-# --tty, -t: allocate a pseudo-TTY
-# --detach, -d: run container in background and print container ID
-# --env: set environment variables
-# --mount: attach a filesystem mount to the container
+    # Start the socat process
+    socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
 
-# For the mount, naming target the directory to mimic a vhub user's home directory.
+    socat_ps=$(ps | grep -v grep | grep "socat")
+    echo $socat_ps
 
-# With this docker run command, a bash window is opened to the /opt/titan_wsp directory for the created container.
-# Need to exit out of the bash window when done.
-#docker run --rm --name titan-gui-container -it --env DISPLAY=192.168.1.151:0 --mount type=bind,source="/Users/renettej/AAB_Titan2D/renettej",target=/home/vhub/renettej titan-gui /bin/bash
+    # Get the ip address of the network interface of the host macOS.
+    # awk '{ print $2 }') gets the second word which is the ip address.
+    ip_address=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
+    #echo $ip_address   
 
-# With this docker run command, the created container is run in the background
-docker run --rm --name titan-gui-container -dit --env DISPLAY=192.168.1.151:0 --mount type=bind,source="/Users/renettej/AAB_Titan2D/renettej",target=/home/vhub/renettej titan-gui
+    # Docker run options:
 
-echo "Opening the titan-gui container X11 window..."
+    # --rm: automatically remove the created container when docker exits
+    # --name: assign a name to the created container
+    # --interactive, -i: keep STDIN open even if not attached
+    # --tty, -t: allocate a pseudo-TTY
+    # --detach, -d: run container in background and print container ID
+    # --env: set environment variables
+    # --mount: attach a filesystem mount to the container
+    # --volume, -v: bind mount a volume
 
-docker exec titan-gui-container /opt/titan_wsp/titan2d_bld/iccoptompmpi/bin/titan_gui.sh
+    # For the mount, naming target the directory to mimic a vhub user's home directory.
 
-echo "Deleting the titan-gui container..."
+    if [ $1 == 1 ]; then
 
-docker stop titan-gui-container
+        # With this docker run command, a bash window is opened to the /opt/titan_wsp directory for the created container.
+        # Need to exit out of the bash window when done.
 
-# Kill the socat process.
-# awk '{ print $1 }') gets the first word which is the PID returned by ps for the socat command.
-socat_ps_pid=$(ps | grep -v grep | grep "socat" | awk '{ print $1 }')
-kill -9 $socat_ps_pid
-caffeinate -w $socat_ps_pid
+        docker run --rm --name titan-gui-container -it --env DISPLAY=$ip_address:0 --mount type=bind,source=/Users/renettej/AAB_Titan2D/renettej,target=/home/vhub/renettej titan-gui /bin/bash
+
+    else
+
+        # With this docker run command, the created container is run in the background and a titan-gui X11 window is opened.
+
+        # When the Input Directory button is selected, 
+        # the file selection dialog opens to the current directory which is currently /root.
+        # For the docker run command below, 
+        # need to migrate to the /home/vhub/renettej directory to select a Titan2D input directory.
+        # For vhub, the Input Directory button event handler code can be modified to open to the user's home directory.
+
+        docker run --rm --name titan-gui-container -dit --env DISPLAY=$ip_address:0 --mount type=bind,source=/Users/renettej/AAB_Titan2D/renettej,target=/home/vhub/renettej titan-gui
+        # docker run --rm --name titan-gui-container -dit --env DISPLAY=$ip_address:0 --volume /Users/renettej/AAB_Titan2D/renettej:/home/vhub/renettej titan-gui
+
+        echo "Opening the titan-gui container X11 window..."
+
+        docker exec titan-gui-container /opt/titan_wsp/titan2d_bld/iccoptompmpi/bin/titan_gui.sh
+
+        echo "Stopping and removing the titan-gui container..."
+
+        docker stop titan-gui-container
+    fi
+
+    # Kill the socat process.
+    # awk '{ print $1 }') gets the first word which is the PID returned by ps for the socat command.
+    socat_ps_pid=$(ps | grep -v grep | grep "socat" | awk '{ print $1 }')
+    kill -9 $socat_ps_pid
+    # wait for the socat process to exit.
+    caffeinate -w $socat_ps_pid
+fi

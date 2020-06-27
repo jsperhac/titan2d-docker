@@ -31,15 +31,40 @@ ENV TITAN_WSP=/opt/titan_wsp
 ENV NUM_PROCESSES=4
 
 # system packages for GUI support
+
+# Note: 
+# Per https://github.com/numpy/numpy/releases,
+# numpy.ndarray.tobytes has existed since version 1.9.
+# PIL/Image.py is returning an error numpy.ndarray object has no attribute 'tobytes'.
+# Per https://centos.pkgs.org/7/,
+# yum install numpy will install numpy-1.7.1-13.el7.x86_64.
+# Installing numpy version 1.11.0 per INSTALL.PORTABLE
+
+# RUN yum -y install \
+#            Cython \
+#            gnuplot \
+#            java-1.7.0-openjdk-devel \
+#            numpy \
+#            python-pillow
+
 RUN yum -y install \
             Cython \
             gnuplot \
             java-1.7.0-openjdk-devel \
-            numpy \
             python-pillow
 
 # ====================================================================
-# images2gifinstallation
+# numpy installation
+# ====================================================================
+WORKDIR $TITAN_WSP/bld
+RUN wget https://github.com/numpy/numpy/archive/v1.11.0.tar.gz && \
+    tar xvzf v1.11.0.tar.gz && \
+    cd numpy-1.11.0 && \
+    python setup.py build && \
+    python setup.py install
+
+# ====================================================================
+# images2gif installation
 # note that this may put the lie to all our attempts to install
 # system packages that work with our python version...
 # ====================================================================
