@@ -25,13 +25,13 @@
 
 if [ $# -ne 1 ] ; then
 
-   echo "Requires an argument. Enter 1 or 2:"
-   echo "1: docker run and open a bash terminal window"
-   echo "2: docker run detached and open a titan-gui X11 window"
+    echo "Requires an argument. Enter 1 or 2:"
+    echo "1: docker run and open a bash terminal window"
+    echo "2: docker run detached and open a titan-gui X11 window"
 
 else
 
-   echo "Creating and running the titan-gui container..."
+    echo "Creating and running the titan-gui container..."
 
     # Start the socat process
     socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
@@ -52,30 +52,34 @@ else
     # --tty, -t: allocate a pseudo-TTY
     # --detach, -d: run container in background and print container ID
     # --env: set environment variables
-    # --mount: attach a filesystem mount to the container
     # --volume, -v: bind mount a volume
+    # --workdir, -w: working directory inside the container
 
-    # For the mount, naming target the directory to mimic a vhub user's home directory.
+    user_home=$(eval echo ~$USER)
+    echo $user_home
 
     if [ $1 == 1 ]; then
 
         # With this docker run command, a bash window is opened to the /opt/titan_wsp directory for the created container.
         # Need to exit out of the bash window when done.
 
-        docker run --rm --name titan-gui-container -it --env DISPLAY=$ip_address:0 --mount type=bind,source=/Users/renettej/AAB_Titan2D/renettej,target=/home/vhub/renettej titan-gui /bin/bash
+        # Mount the user's home directory.  
+
+        docker run --rm --name titan-gui-container -it --env DISPLAY=$ip_address:0 --mount type=bind,source=$user_home,target=$user_home titan-gui /bin/bash
 
     else
 
         # With this docker run command, the created container is run in the background and a titan-gui X11 window is opened.
 
-        # When the Input Directory button is selected, 
-        # the file selection dialog opens to the current directory which is currently /root.
-        # For the docker run command below, 
-        # need to migrate to the /home/vhub/renettej directory to select a Titan2D input directory.
-        # For vhub, the Input Directory button event handler code can be modified to open to the user's home directory.
+        # Mount the user's home and Apache Derby database directories.
+        # Change the working directory from the default /root to the user's mounted home directory.
 
-        docker run --rm --name titan-gui-container -dit --env DISPLAY=$ip_address:0 --mount type=bind,source=/Users/renettej/AAB_Titan2D/renettej,target=/home/vhub/renettej titan-gui
-        # docker run --rm --name titan-gui-container -dit --env DISPLAY=$ip_address:0 --volume /Users/renettej/AAB_Titan2D/renettej:/home/vhub/renettej titan-gui
+        # Create the $user_home/.titan directory if it does not exist
+        mkdir -p $user_home/.titan
+
+        docker run --rm --name titan-gui-container -dit --env DISPLAY=$ip_address:0 \
+            --mount type=bind,source=$user_home,target=$user_home --mount type=bind,source=$user_home/.titan,target=/root/.titan \
+            --workdir=$user_home --env TITAN2D_INPUTDIR=$user_home titan-gui
 
         echo "Opening the titan-gui container X11 window..."
 
@@ -89,7 +93,12 @@ else
     # Kill the socat process.
     # awk '{ print $1 }') gets the first word which is the PID returned by ps for the socat command.
     socat_ps_pid=$(ps | grep -v grep | grep "socat" | awk '{ print $1 }')
-    kill -9 $socat_ps_pid
-    # wait for the socat process to exit.
-    caffeinate -w $socat_ps_pid
+    if [ -z "$socat_ps_id" ]; then
+        echo $socat_ps_pid
+    else
+        echo $socat_ps_pid
+        kill -9 $socat_ps_pid
+        # wait for the socat process to exit.
+        caffeinate -w $socat_ps_pid
+    fi
 fi
