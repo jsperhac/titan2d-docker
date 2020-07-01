@@ -52,7 +52,7 @@ else
     # --tty, -t: allocate a pseudo-TTY
     # --detach, -d: run container in background and print container ID
     # --env: set environment variables
-    # --volume, -v: bind mount a volume
+    # --mount: attach a filesystem mount to the container
     # --workdir, -w: working directory inside the container
 
     user_home=$(eval echo ~$USER)
