@@ -10,8 +10,8 @@ LABEL desc="Titan2d test install from binaries, v4.0.0"
 ENV TITAN_WSP=/opt/titan_wsp
 WORKDIR $TITAN_WSP
 
-# something is presently going wrong here
-RUN yum -y install wget
+RUN yum -y update && \
+	yum -y install wget
 
 RUN wget https://github.com/TITAN2D/titan2d/releases/download/v4.0.0/titan2d-v4.0.0-Linux-64bit.tar.gz && \
 	tar xvzf titan2d-v4.0.0-Linux-64bit.tar.gz
