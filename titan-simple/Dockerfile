@@ -1,9 +1,15 @@
 # install Titan2d, no GUI, system Python2, OpenMP, and its major dependencies
+#
 # build:
-#   docker image build -t titan-simple .
+#   docker build --tag titan-simple .
 # run:
 #   docker run -it titan-simple /bin/sh
-# test: refer to test directory...
+# test: 
+#   in example directory:
+#	    cd titan2d-v4.0.0/share/titan2d_examples/colimafinemini/Coulomb
+#   execute with 2 threads:
+#	    ../../../../bin/titan -nt 2 input.py
+#
 FROM centos:7
 LABEL desc="Titan2d install, no GUI, system Python2, OpenMP, with dependencies, centos:7"
 
