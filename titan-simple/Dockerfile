@@ -4,9 +4,8 @@
 #   docker build --tag titan-simple .
 # run:
 #   docker run -it titan-simple /bin/sh
-# test: 
-#   in example directory:
-#	    cd titan2d-v4.0.0/share/titan2d_examples/colimafinemini/Coulomb
+# test example:
+#       cd /opt/titan_wsp/titan2d_bld/iccoptompmpi/share/titan2d_examples/colimafinemini/Coulomb
 #   execute with 2 threads:
 #	    ../../../../bin/titan -nt 2 input.py
 #
